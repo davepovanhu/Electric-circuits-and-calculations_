@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electric Circuit</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Loading Screen */
+        #loadingContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #282c34;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;  /* Ensure it's above other content */
+        }
+
+        #logoContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #loadingLogo {
+            width: 200px;  /* Adjust the size of the logo */
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        #progressBar {
+            width: 200px;  /* Same width as the logo */
+            height: 10px;
+            background-color: #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #progress {
+            width: 0;
+            height: 100%;
+            background-color: #71da7a;  /* Green color for progress */
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading screen with logo and progress bar -->
+    <div id="loadingContainer">
+        <div id="logoContainer">
+            <img id="loadingLogo" src="Logo.png" alt="Company Logo">
+            <div id="progressBar">
+                <div id="progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main content, initially hidden -->
+    <div id="mainContent" style="display: none;"> <!-- Initially hidden -->
+        <div id="title">Electric Circuit</div>
+        
+        <div id="main">
+            <div id="container">
+                <img id="logo" src="Logo.png" alt="Logo" />
+                <div id="calcInfo">
+                    <p>Voltage: <span id="voltageOutput">10</span> V</p>
+                    <p>Resistance: <span id="resistanceOutput">10</span> Ω</p>
+                    <p>Current: <span id="currentOutput">1.00</span> A</p>
+                </div>
+                <div id="components">
+                    <!-- Components will be added here -->
+                </div>
+            </div>
+
+            <div id="additionalBox">
+                <h3>Add Components</h3>
+                <button id="addComponentButton">Add Component</button>
+                <select id="componentSelector">
+                    <option value="">Select Component</option>
+                    <option value="bulb">Bulb</option>
+                    <option value="open_switch">Open Switch</option>
+                    <option value="closed_switch">Closed Switch</option>
+                    <option value="resistor">Resistor</option>
+                    <option value="diode">Diode</option>
+                    <option value="ammeter">Ammeter</option>
+                </select>
+                <div id="controls">
+                    <label for="voltageSlider">Voltage (V):</label>
+                    <input type="range" id="voltageSlider" min="0" max="100" value="10">
+                    
+                    <label for="resistanceSlider">Resistance (Ω):</label>
+                    <input type="range" id="resistanceSlider" min="1" max="100" value="10">
+
+                    <label for="circuitType">Circuit Type:</label>
+                    <select id="circuitType">
+                        <option value="series">Series</option>
+                        <option value="parallel">Parallel</option>
+                    </select>
+                    
+                    <button id="playButton">Start Simulation</button>
+                    <button id="pauseButton">Pause Simulation</button>
+                    <button id="quiz" onclick="startQuiz()">Start Quiz</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script src="sketch.js"></script>
+    <script>
+        window.onload = function() {
+            let progress = 0;
+            let progressBar = document.getElementById('progress');
+            let loadingScreen = document.getElementById('loadingContainer');
+            let mainContent = document.getElementById('mainContent');
+            
+            let loadingInterval = setInterval(function() {
+                progress += 10;
+                progressBar.style.width = progress + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(loadingInterval);
+                    loadingScreen.style.display = 'none';
+                    mainContent.style.display = 'block';
+                }
+            }, 200);
+        };
+
+        function startQuiz() {
+            window.location.href = 'quiz.html';
+        }
+
+        document.getElementById('addComponentButton').onclick = function() {
+            let selector = document.getElementById('componentSelector');
+            let selectedComponent = selector.value;
+            if (selectedComponent) {
+                addComponent(selectedComponent);
+                selector.selectedIndex = 0; // Reset the dropdown
+            }
+        };
+
+        function addComponent(type) {
+            const componentsDiv = document.getElementById('components');
+            const componentDiv = document.createElement('div');
+            componentDiv.className = 'component ' + type;
+            componentDiv.innerText = type.charAt(0).toUpperCase() + type.slice(1);
+            componentsDiv.appendChild(componentDiv);
+        }
+    </script>
+</body>
+</html>
